@@ -7,41 +7,35 @@ tf.enable_eager_execution()
 In [0]:
 x_data = [1, 2, 3, 4, 5]
 y_data = [1, 2, 3, 4, 5]
+#데이터를 준비한다. x data는 입력 y data는 출력 데이터 x data와 y data가 같은 것은 입력과 출력이 같은 모델을 만드려고 하는 것.
 In [3]:
 import matplotlib.pyplot as plt
 plt.plot(x_data, y_data, 'o')
 plt.ylim(0, 8)
-Out[3]:
-(0, 8)
+Out[3]:(0, 8)
 
-In [4]:
-v =[1., 2., 3., 4.]
+In [4]:v =[1., 2., 3., 4.]
 tf.reduce_mean(v) # 2.5
-Out[4]:
-<tf.Tensor: id=6, shape=(), dtype=float32, numpy=2.5>
+Out[4]:<tf.Tensor: id=6, shape=(), dtype=float32, numpy=2.5>
 In [5]:
 tf.square(3) # 9
-Out[5]:
-<tf.Tensor: id=9, shape=(), dtype=int32, numpy=9>
+Out[5]:<tf.Tensor: id=9, shape=(), dtype=int32, numpy=9>
 In [6]:
 x_data = [1, 2, 3, 4, 5]
 y_data = [1, 2, 3, 4, 5]
 
 W = tf.Variable(2.0)
 b = tf.Variable(0.5)
+#w와 b값을 지정. tensorflow의 variable로 정의. 각각 2.0과 0.5를 초기값으로 지정함. 초기값은 임의의 값.
 
 hypothesis = W * x_data + b
-WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow/python/ops/resource_variable_ops.py:642: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Colocations handled automatically by placer.
+#우리가 하려는 가설함수. 수식을 그대로 코드로 옮긴 것.
 In [7]:
 W.numpy(), b.numpy()
-Out[7]:
-(2.0, 0.5)
+Out[7]:(2.0, 0.5)
 In [8]:
 hypothesis.numpy()
-Out[8]:
-array([ 2.5,  4.5,  6.5,  8.5, 10.5], dtype=float32)
+Out[8]:array([ 2.5,  4.5,  6.5,  8.5, 10.5], dtype=float32)
 In [9]:
 plt.plot(x_data, hypothesis.numpy(), 'r-')
 plt.plot(x_data, y_data, 'o')
@@ -50,46 +44,45 @@ plt.show()
 
 In [0]:
 cost = tf.reduce_mean(tf.square(hypothesis - y_data))
+#hypothesis에서 y값을 뺀 값을 제곱하고 그것을 다시 평균내는 것이 cost함수. 우리의 가설과 실제 데이터 사이의 차이가 에러가 됨. 
 In [11]:
 with tf.GradientTape() as tape:
     hypothesis = W * x_data + b
     cost = tf.reduce_mean(tf.square(hypothesis - y_data))
-
+#with 함수의 변수들의 변화, 정보를 tape에 기록.     
 W_grad, b_grad = tape.gradient(cost, [W, b])
+#tape에 gradient 메소드를 호출해서 미분값을 구함. 변수들에 대한 개별 미분값을 구해서 순서대로 반환. w_grab는 w의 미분값, b_grab은 b의 미분값. 
 W_grad.numpy(), b_grad.numpy()
-Out[11]:
-(25.0, 7.0)
+Out[11]:(25.0, 7.0)
 
-In [12]:
-learning_rate = 0.01
-
+In [12]:learning_rate = 0.01
+#learning_rate는 grab값을 얼마나 반영할것인지를 결정함. 크면 많이 반영 작으면 조금 반영.
 W.assign_sub(learning_rate * W_grad)
 b.assign_sub(learning_rate * b_grad)
-
+#assign_sub는 뺀 값을 다시 그 값에 할당해줌. 
 W.numpy(), b.numpy()
-Out[12]:
-(1.75, 0.43)
+Out[12]:(1.75, 0.43)
 In [13]:
 plt.plot(x_data, hypothesis.numpy(), 'r-')
 plt.plot(x_data, y_data, 'o')
 plt.ylim(0, 8)
-Out[13]:
-(0, 8)
+Out[13]:(0, 8)
 
 In [14]:
 W = tf.Variable(2.9)
 b = tf.Variable(0.5)
 
 for i in range(100):
+#100번 수행.
     with tf.GradientTape() as tape:
         hypothesis = W * x_data + b
-        cost = tf.reduce_mean(tf.square(hypothesis - y_data))
-    W_grad, b_grad = tape.gradient(cost, [W, b])
+        cost = tf.reduce_mean(tf.square(hypothesis - y_data))    
+    W_grad, b_grad = tape.gradient(cost, [W, b])    
     W.assign_sub(learning_rate * W_grad)
     b.assign_sub(learning_rate * b_grad)
     if i % 10 == 0:
       print("{:5}|{:10.4f}|{:10.4f}|{:10.6f}".format(i, W.numpy(), b.numpy(), cost))
-
+#i값이 10의 배수가 될 때마다 print하기로 함.
 plt.plot(x_data, y_data, 'o')
 plt.plot(x_data, hypothesis.numpy(), 'r-')
 plt.ylim(0, 8)
@@ -103,8 +96,7 @@ plt.ylim(0, 8)
    70|    1.0053|   -0.0192|  0.000067
    80|    1.0051|   -0.0185|  0.000063
    90|    1.0050|   -0.0179|  0.000059
-Out[14]:
-(0, 8)
+Out[14]:(0, 8)
 
 In [15]:
 print(W * 5 + b)
@@ -116,15 +108,15 @@ In [16]:
 import tensorflow as tf
 import numpy as np
 tf.enable_eager_execution()
-
+# tensorflow를 import함. eager excution을 활성화.
 # Data
 x_data = [1, 2, 3, 4, 5]
 y_data = [1, 2, 3, 4, 5]
-
+#데이터 준비
 # W, b initialize
 W = tf.Variable(2.9)
 b = tf.Variable(0.5)
-
+#임의로 초기값 w,b 지정.
 # W, b update
 for i in range(100):
     # Gradient descent
@@ -136,7 +128,7 @@ for i in range(100):
     b.assign_sub(learning_rate * b_grad)
     if i % 10 == 0:
       print("{:5}|{:10.4f}|{:10.4f}|{:10.6f}".format(i, W.numpy(), b.numpy(), cost))
-
+#gradient descent라는 알고리즘을 통해서 w와 b값을 지속적으로 갱신. 중간중간 print하여 
 print()
 
 # predict
@@ -152,7 +144,7 @@ print(W * 2.5 + b)
    70|    1.0053|   -0.0192|  0.000067
    80|    1.0051|   -0.0185|  0.000063
    90|    1.0050|   -0.0179|  0.000059
-
+#i는 증가함. w값은 2.9로 시작하여 1.0으로 수렴하고 있음. b값은 0.5로 시작하여 0에 가까운 값으로 수렴하고 있음. cost는 작을수록 좋음. 급속하게 0으로 감소함
 tf.Tensor(5.0066934, shape=(), dtype=float32)
 tf.Tensor(2.4946523, shape=(), dtype=float32)
 
