@@ -3,19 +3,25 @@ tf.enable_eager_execution()
 dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(len(x_train))
 W = tf.Variable(tf.random_normal([8, 1]), name='weight')
 b = tf.Variable(tf.random_normal([1]), name='bias')
+#tensorflow를 eager모드로 실행. 가져올 데이터 tf데이터를 통해서 x,y 값을 실제 x의 길이만큼 batch로 학습하겠다는 것을 토대로 data값을 가져옴.
+#원하는 모델 선언.
 
 def logistic_regression(features):
     hypothesis  = tf.div(1., 1. + tf.exp(tf.matmul(features, W) + b))
     return hypothesis
+#logistic regression하기 위해 나온 값을 sigmoid함수라고 볼 수 있음. 우리가 원하는 hypothesis를 그릴 수 있음.     
 def loss_fn(features, labels):
     hypothesis=logistic_regression(features)
     cost = -tf.reduce_mean(labels * tf.log(loss_fn(hypothesis) + (1 - labels) * tf.log(1 - hypothesis))
     return cost
+#hypothesis로 나온 값을 실제 label에 넣으면 cost값을 구할 수 있음.
 def grad(hypothesis, features, labels):
     with tf.GradientTape() as tape:
         loss_value = loss_fn(logistic_regression(features),features,labels)
     return tape.gradient(loss_value, [W,b])
+#학습을 위해 나온 hypothesis와 label로 loss값을 구할 수 있음. gradient를 통해 실제 우리의 모델값을 계속 바꿔갈 수 있음.
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
+#gradientdescentoptinizer를 통해서 실제 우리가 이동할 learning rate를 통한 값으로 optimizer선언.
 
 for step in range(EPOCHS):
     for features, labels  in tfe.Iterator(dataset):
@@ -23,10 +29,14 @@ for step in range(EPOCHS):
         optimizer.apply_gradients(grads_and_vars=zip(grads,[W,b]))
         if step % 100 == 0:
             print("Iter: {}, Loss: {:.4f}".format(step, loss_fn(logistic_regression(features),features,labels)))
-            
+#선언한 함수들을 실제 학습을 위해 함수 호출. 위에서 가져온 data값을 토대로 iterator를 실행하여 모델을 만듦. 나온 값을 실제 가설에 넣음.
+#알고리즘을 통해 minimize하는 것을 구함. 이 과정을 통해 x,b가 계속 업데이트 됨. cost함수를 줄여가며 최적의 값을 만들 수 있음.
+
 def accuracy_fn(hypothesis, labels):
     predicted = tf.cast(hypothesis > 0.5, dtype=tf.float32)
     accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, labels), dtype=tf.int32))
     return accuracy
-    
+#가설과 함수를 비교하기 위한 함수 선언. 예측 값과 실제 값을 비교하여 정확성 출력.     
+
 test_acc = accuracy_fn(logistic_regression(x_test),y_test)    
+#test_acc를 x,y test를 넣어서 출력해낼 수 있음.
