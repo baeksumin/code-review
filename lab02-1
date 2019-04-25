@@ -20,6 +20,8 @@ Out[4]:<tf.Tensor: id=6, shape=(), dtype=float32, numpy=2.5>
 In [5]:
 tf.square(3) # 9
 Out[5]:<tf.Tensor: id=9, shape=(), dtype=int32, numpy=9>
+#차원이 줄어들면서 mean을 구함. 1차원을 reduce_mean해서 나온 결과가 2.5. square는 넘겨받은 값을 제곱. 3의 제곱은 9.
+
 In [6]:
 x_data = [1, 2, 3, 4, 5]
 y_data = [1, 2, 3, 4, 5]
