@@ -1,6 +1,7 @@
 In [8]:
 import tensorflow as tf
 import numpy as np
+#numpy를 import.
 
 tf.enable_eager_execution()
 tf.__version__
@@ -44,6 +45,7 @@ Y = np.array([1, 2, 3])
 def cost_func(W, X, Y):
   hypothesis = X * W
   return tf.reduce_mean(tf.square(hypothesis - Y))
+#hypothesis에서 y를 뺀 값을 제곱하여 평균을 내는 cost 함수.
 
 W_values = np.linspace(-3, 5, num=15)
 cost_values = []
@@ -67,7 +69,8 @@ for feed_W in W_values:
  3.857 |   38.09524
  4.429 |   54.85714
  5.000 |   74.66667
- 
+#w값은 -3에서 5로 변화하고 cost값은 점점 줄어들다가 w값이 1이 되었을 때 최소가 되고 다시 늘어남.
+
  In [0]:
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (8,6)
@@ -131,6 +134,7 @@ for step in range(300):
   280 |     0.0000 |   1.000074
   290 |     0.0000 |   1.000046
 #처음에 cost값은 매우 큰 값을 가지고 있다가 급속하게 줄어서 0으로 수렴. w값 역시 임의의 값이었다가 특정 값으로 수렴.
+
 In [17]:
 print(5.0 * W)
 print(2.5 * W)
@@ -184,5 +188,5 @@ for step in range(300):
   270 |     0.0000 |   1.000009
   280 |     0.0000 |   1.000006
   290 |     0.0000 |   1.000004
-  
+  #cost값은 0에 가깝게 수렴하고 w값은 특정한 값에 수렴.
   
